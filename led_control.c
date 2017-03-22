@@ -18,7 +18,6 @@ void led_control(void)
 		case 0:		//手動控制
 		{
 			//0x19
-			//unsigned int t2 = PSinterface2.FANSetSpeed;
 			pwm1_out_set(PSinterface2.FANSetSpeed);
 		}
 		break;
@@ -34,8 +33,8 @@ void led_control(void)
 		case 3:		//強制中轉速
 		{
 			//0x1a
-			//unsigned int t3 = PSinterface2.FANSetMedSpeed;
-			pwm1_out_set(PSinterface2.FANSetMedSpeed);
+			//pwm1_out_set(PSinterface2.FANSetMedSpeed);
+			pwm1_out_set(0x0a);
 		}
 		break;
 		case 4:		//強制高轉速

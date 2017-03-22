@@ -113,36 +113,30 @@ void adc_change(void)
 #if		ADC_DEBUG	== 1
 	adc_data[ADC_PS2_D5-1] = CalValueIn.Uint[0];		//6
 #endif
-	CalValueIn.UW4 = CalValueIn.UW4 * 23;				
-	CalValueIn.UW4 = CalValueIn.UW4 >> 8;
-	CalValueIn.UW4 = CalValueIn.UW4 + 1;
+	CalValueIn.UW4 = CalValueIn.UW4 / 11;				
 	PSinterface1.PS2_D5V = CalValueIn.Ubyte[0];
 
 	adc_read(ADC_PS2_D9);	
 #if		ADC_DEBUG	== 1
 	adc_data[ADC_PS2_D9-1] = CalValueIn.Uint[0];		//7
-#endif
-	CalValueIn.UW4 = CalValueIn.UW4 + 2;	
-	CalValueIn.UW4 = CalValueIn.UW4 * 4439;			
-	CalValueIn.UW4 = CalValueIn.UW4 >> 15;
+#endif	
+	CalValueIn.UW4 = CalValueIn.UW4 * 35;			
+	CalValueIn.UW4 = CalValueIn.UW4 / 256;
 	PSinterface1.PS2_D9V = CalValueIn.Ubyte[0];
 
 	adc_read(ADC_PS1_D5);	
 #if		ADC_DEBUG	== 1
 	adc_data[ADC_PS1_D5-1] = CalValueIn.Uint[0];		//8
 #endif
-	CalValueIn.UW4 = CalValueIn.UW4 * 23;				
-	CalValueIn.UW4 = CalValueIn.UW4 >> 8;
-	CalValueIn.UW4 = CalValueIn.UW4 + 1;
+	CalValueIn.UW4 = CalValueIn.UW4 / 11;				
 	PSinterface1.PS1_D5V = CalValueIn.Ubyte[0];
 
 	adc_read(ADC_PS1_D9);
 #if		ADC_DEBUG	== 1
 	adc_data[ADC_PS1_D9-1] = CalValueIn.Uint[0];		//9
-#endif
-	CalValueIn.UW4 = CalValueIn.UW4 + 2;	
-	CalValueIn.UW4 = CalValueIn.UW4 * 4439;			
-	CalValueIn.UW4 = CalValueIn.UW4 >> 15;
+#endif	
+	CalValueIn.UW4 = CalValueIn.UW4 * 35;			
+	CalValueIn.UW4 = CalValueIn.UW4 / 256;
 	PSinterface1.PS1_D9V = CalValueIn.Ubyte[0];
 	//------------------------------
 
