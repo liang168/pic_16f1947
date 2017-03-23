@@ -60,21 +60,21 @@ void uart_tx_main(void)
 			uart_buffer[1] = uart_rx_buff[5];
 			uart_buffer[2] = uart_rx_buff[6];
 		}
-		else if(uart_rx_buff[2] == 0x02 && uart_rx_buff[3] == 0x01)
+		else if((uart_rx_buff[2] == 0x02) && (uart_rx_buff[3] == 0x01))
 		{
 			uart_start = uart_start + 2;
 		}
-		else if(uart_rx_buff[2] == 0x02 && uart_rx_buff[3] == 0x02)
+		else if((uart_rx_buff[2] == 0x02) && (uart_rx_buff[3] == 0x02))
 		{
 			uart_start = uart_start + 3;
 		}
-		else if(uart_rx_buff[2] == 0x02 && uart_rx_buff[3] == 0x03)
+		else if((uart_rx_buff[2] == 0x02) && (uart_rx_buff[3] == 0x03))
 		{
 			uart_start = uart_start + 4;
 			uart_buffer[1] = uart_rx_buff[5];
 			uart_buffer[2] = uart_rx_buff[6];
 		}
-		else if(uart_rx_buff[2] == 0x08 && uart_rx_buff[3] == 0x73)
+		else if((uart_rx_buff[2] == 0x08) && (uart_rx_buff[3] == 0x73))
 		{
 			uart_start = uart_start + 8;
 			uart_buffer[1] = uart_rx_buff[5];
@@ -90,7 +90,7 @@ void uart_tx_main(void)
 			return ;
 		}
 
-		if( (uart_start&0x03) == 1)
+		if( (uart_start&0x03) == 0x01)
 		{
 			unsigned char address = uart_buffer[0];
 			

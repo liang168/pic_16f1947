@@ -22,9 +22,17 @@ void led_control(void)
 		}
 		break;
 		case 1:		//根據溫度自動控制
-		if(PSinterface2.Gain_Temperature > 30)
+		if(PSinterface2.Gain_Temperature < 400)
 		{
-			pwm1_out_set(0x10);
+			pwm1_out_set(0x02);
+		}
+		else if( (PSinterface2.Gain_Temperature > 400) && (PSinterface2.Gain_Temperature < 590) )
+		{
+			pwm1_out_set(0x0a);
+		}
+		else if(PSinterface2.Gain_Temperature > 590 )
+		{
+			pwm1_out_set(0x14);
 		}
 		break;
 		case 2:		//強制低轉速
@@ -43,7 +51,7 @@ void led_control(void)
 	}
 
 
-	if ( PORTD & 0b01000000 == 0 )	//風扇有接上
+	if ( (PORTD & 0b01000000) == 0 )	//風扇有接上
 	{
 		//亮綠燈
 		LATB &= ~(1<<0);
@@ -64,7 +72,7 @@ void led_control(void)
 		LATD &= ~(1<<2);
 	}
 	
-	if ( PORTD & 0b10000000 == 0 )
+	if ( (PORTD & 0b10000000) == 0 )
 	{
 		LATB &= ~(1<<3);
 		LATB &= ~(1<<4);
@@ -83,12 +91,12 @@ void led_control(void)
 		LATB |= (1<<5);
 	}
 
-	if ( PORTE & 0x40 == 0 )
+	if ( (PORTE & 0x40) == 0 )
 		LATC |= (1<<0);		//PS1_IN
 	else
 		LATC &= ~(1<<0);	//PS1_IN
 
-	if ( PORTE & 0x80 == 0 )
+	if ( (PORTE & 0x80) == 0 )
 		LATC |= (1<<1);		//PS2_IN
 	else
 		LATC &= ~(1<<1);	//PS2_IN

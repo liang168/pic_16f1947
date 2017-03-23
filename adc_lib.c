@@ -93,9 +93,9 @@ void adc_change(void)
 #if		ADC_DEBUG	== 1
 	adc_data[11] = CalValueIn.Uint[0];
 #endif
-	CalValueIn.UW4 = CalValueIn.UW4 * 1011;				
-	CalValueIn.UW4 = CalValueIn.UW4 / 64;
-	CalValueIn.UW4 = CalValueIn.UW4 - 1394;
+	CalValueIn.UW4 = CalValueIn.UW4 * 2837;				
+	CalValueIn.UW4 = CalValueIn.UW4 / 128;
+	CalValueIn.UW4 = CalValueIn.UW4 - 16012;
 	PSinterface1.PS_I_9V = CalValueIn.Uint[0];
 
 	adc_read(DC5VS_CURRENT);
@@ -261,24 +261,24 @@ unsigned int check_alarm_lo(unsigned int fan1_adc,unsigned int fan2_adc,
 	if(num == 0)
 	{
 		//插槽確定
-		if ( PORTE&0x40 == 0 )
+		if ( (PORTE&0x40) == 0 )
 			clrbit(out_alarm,5);
 		else
 			setbit(out_alarm,5);
 
-		if ( PORTE&0x80 == 0 )
+		if ( (PORTE&0x80) == 0 )
 			clrbit(out_alarm,6);
 		else
 			setbit(out_alarm,6);
 		//接上風扇測試
-		if( PORTD & 0x40 == 0 )
+		if( (PORTD & 0x40) == 0 )
 			clrbit(out_alarm,0);
 		else
 			setbit(out_alarm,0);
 	}
 	else if(num == 1)
 	{
-		if( PORTD & 0x80 == 0 )
+		if( (PORTD & 0x80) == 0 )
 			clrbit(out_alarm,8);
 		else
 			setbit(out_alarm,8);		
