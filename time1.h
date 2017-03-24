@@ -14,7 +14,7 @@
 //#define	TIME1_SET_DATA_L0	0x70
 //#define	TIME1_SET_DATA_L1	0x7e	
 
-#define	MAX_FAN_COUNT 	0x96	//超標值設定
+#define	MAX_FAN_COUNT 	0xa8	//超標值設定
 
 unsigned char time1_out;		//time1 中斷時間到辯識用
 unsigned char fan_status;		//每次抓到的fan狀態

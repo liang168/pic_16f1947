@@ -41,7 +41,7 @@ void adc_hw_init(void)
 	PSinterface1.FAN5_I	= 0;
 	PSinterface1.FAN6_I	= 0;
 
-	PSinterface2.Gain_Temperature		= 35;	//溫度起始值設定
+	PSinterface2.Gain_Temperature		= 300;	//溫度起始值設定
 
 	//設定ADC 資料右邊對齊 FOSC/64 VREF+接外部參考電源
 	ADCON1 	= 0b11100010;
@@ -147,7 +147,11 @@ void adc_change(void)
 #endif
 	CalValueIn.UW4 = CalValueIn.UW4 * 491;
 	CalValueIn.UW4 = CalValueIn.UW4 / 1024;
-	PSinterface1.FAN6_I = CalValueIn.Uint[0];
+
+	if(PSinterface1.FAN6_Rate == 0)
+		PSinterface1.FAN6_I = 0;
+	else
+		PSinterface1.FAN6_I = CalValueIn.Uint[0];
 
 	adc_read(FAN5_IN);
 #if		ADC_DEBUG	== 1
@@ -155,7 +159,11 @@ void adc_change(void)
 #endif
 	CalValueIn.UW4 = CalValueIn.UW4 * 491;
 	CalValueIn.UW4 = CalValueIn.UW4 / 1024;
-	PSinterface1.FAN5_I = CalValueIn.Uint[0];
+
+	if(PSinterface1.FAN5_Rate == 0)
+		PSinterface1.FAN5_I = 0;
+	else
+		PSinterface1.FAN5_I = CalValueIn.Uint[0];
 
 	adc_read(FAN4_IN);
 #if		ADC_DEBUG	== 1
@@ -163,7 +171,11 @@ void adc_change(void)
 #endif
 	CalValueIn.UW4 = CalValueIn.UW4 * 491;
 	CalValueIn.UW4 = CalValueIn.UW4 / 1024;
-	PSinterface1.FAN4_I = CalValueIn.Uint[0];
+
+	if(PSinterface1.FAN4_Rate == 0)
+		PSinterface1.FAN4_I = 0;
+	else
+		PSinterface1.FAN4_I = CalValueIn.Uint[0];
 
 	adc_read(FAN3_IN);
 #if		ADC_DEBUG	== 1
@@ -171,7 +183,11 @@ void adc_change(void)
 #endif
 	CalValueIn.UW4 = CalValueIn.UW4 * 491;
 	CalValueIn.UW4 = CalValueIn.UW4 / 1024;
-	PSinterface1.FAN3_I = CalValueIn.Uint[0];
+
+	if(PSinterface1.FAN3_Rate == 0)
+		PSinterface1.FAN3_I = 0;
+	else
+		PSinterface1.FAN3_I = CalValueIn.Uint[0];
 
 	adc_read(FAN2_IN);
 #if		ADC_DEBUG	== 1
@@ -179,7 +195,11 @@ void adc_change(void)
 #endif
 	CalValueIn.UW4 = CalValueIn.UW4 * 491;
 	CalValueIn.UW4 = CalValueIn.UW4 / 1024;
-	PSinterface1.FAN2_I = CalValueIn.Uint[0];
+
+	if(PSinterface1.FAN2_Rate == 0)
+		PSinterface1.FAN2_I = 0;
+	else
+		PSinterface1.FAN2_I = CalValueIn.Uint[0];
 
 	adc_read(FAN1_IN);
 #if		ADC_DEBUG	== 1
@@ -187,7 +207,11 @@ void adc_change(void)
 #endif
 	CalValueIn.UW4 = CalValueIn.UW4 * 491;
 	CalValueIn.UW4 = CalValueIn.UW4 / 1024;
-	PSinterface1.FAN1_I = CalValueIn.Uint[0];
+
+	if(PSinterface1.FAN1_Rate == 0)
+		PSinterface1.FAN1_I = 0;
+	else
+		PSinterface1.FAN1_I = CalValueIn.Uint[0];
 
 	//比對各風扇狀態
 	PSinterface1.FAN12_Status = check_fan_alarm(0);
@@ -262,14 +286,14 @@ unsigned int check_alarm_lo(unsigned int fan1_adc,unsigned int fan2_adc,
 	{
 		//插槽確定
 		if ( (PORTE&0x40) == 0 )
-			clrbit(out_alarm,5);
-		else
-			setbit(out_alarm,5);
-
-		if ( (PORTE&0x80) == 0 )
 			clrbit(out_alarm,6);
 		else
 			setbit(out_alarm,6);
+
+		if ( (PORTE&0x80) == 0 )
+			clrbit(out_alarm,5);
+		else
+			setbit(out_alarm,5);
 		//接上風扇測試
 		if( (PORTD & 0x40) == 0 )
 			clrbit(out_alarm,0);

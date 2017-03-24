@@ -24,7 +24,7 @@ void led_control(void)
 		case 1:		//根據溫度自動控制
 		if(PSinterface2.Gain_Temperature < 400)
 		{
-			pwm1_out_set(0x02);
+			pwm1_out_set(0x04);
 		}
 		else if( (PSinterface2.Gain_Temperature > 400) && (PSinterface2.Gain_Temperature < 590) )
 		{
@@ -36,7 +36,7 @@ void led_control(void)
 		}
 		break;
 		case 2:		//強制低轉速
-		pwm1_out_set(0x02);
+		pwm1_out_set(0x04);		//0x03 低於1000轉 會偵測不到轉速
 		break;
 		case 3:		//強制中轉速
 		{

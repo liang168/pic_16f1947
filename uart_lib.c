@@ -38,7 +38,7 @@ void uart_init(void)
 void uart_tx_main(void)
 {
 	unsigned char i = 0;
-	if( (uart_start & 0x80) == 0x80)
+	if( (uart_start & 0x80) == 0x80)	//只看最高bit是否有設定有才確認動作
 	{
 		if(uart_rx_buff[0] != 0x10 && uart_rx_buff[1] != 0x02 &&
 		uart_rx_buff[4] != 0x01 && uart_rx_buff[7] != 0x10 && 
@@ -56,9 +56,9 @@ void uart_tx_main(void)
 		if(uart_rx_buff[2] == 0x01)
 		{
 			uart_start = uart_start + 1;
-//			uart_buffer[0] = uart_rx_buff[3];
-			uart_buffer[1] = uart_rx_buff[5];
-			uart_buffer[2] = uart_rx_buff[6];
+			uart_buffer[0] = uart_rx_buff[3];	//寫入位址
+			uart_buffer[1] = uart_rx_buff[5];	//lo資料
+			uart_buffer[2] = uart_rx_buff[6];	//hi資料
 		}
 		else if((uart_rx_buff[2] == 0x02) && (uart_rx_buff[3] == 0x01))
 		{
@@ -97,7 +97,7 @@ void uart_tx_main(void)
 			write_interface(address,uart_buffer[1],uart_buffer[2]);
 			if(address >= 0x18)
 			{
-				//轉換成eeprom 位址
+				//轉換成eeprom 位址 因EEPROM是從零開始
 				address  = address - 0x18;
 				address = address * 2;
 			}
@@ -209,9 +209,12 @@ void uart_tx_main(void)
 
 			write_int_eeprom(6,0x02,0x58);
 			write_int_eeprom(8,0x00,0x05);
-
+			write_int_eeprom(10,0x00,0x00);
 			write_int_eeprom(12,0x16,0xda);
 			write_int_eeprom(14,0x04,0x1a);	
+			write_int_eeprom(16,0x00,0x00);
+
+			write_int_eeprom(32,0x30,0x04);
 
 			uart_buffer[0] = 0;
 			uart_buffer[1] = 0;
@@ -252,6 +255,11 @@ void uart_sned_buffer(unsigned char count)
 {
 	unsigned char i = 0;
 	unsigned char crc = 0;
+
+	//指令
+	crc = crc + uart_rx_buff[2];
+	crc = crc + uart_rx_buff[3];
+	crc = crc + (count*2);
 
 	for(i=0;i<count;i++)
 	{

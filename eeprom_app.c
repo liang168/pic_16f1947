@@ -32,10 +32,10 @@ void write_int_eeprom(unsigned char address,unsigned char lo,unsigned char hi)
 
 void write_low_eeprom(unsigned char write_add,unsigned char write_data)
 {
-	while(WR == 1);
+//	while(WR == 1);
 
 	EEADR	= write_add;
-	EEDAT	= write_data;
+	EEDATA	= write_data;
 
 	GIE		= 0;
 	PEIE	= 0;
@@ -46,7 +46,7 @@ void write_low_eeprom(unsigned char write_add,unsigned char write_data)
 	EECON2	= 0x55;
 	EECON2	= 0xaa;
 	WR		= 1;
-
+	while(WR == 1);
 	GIE		= 1;
 	PEIE	= 1;
 
@@ -55,7 +55,7 @@ void write_low_eeprom(unsigned char write_add,unsigned char write_data)
 
 unsigned char read_low_eeprom(unsigned char x1)
 {
-	while(RD == 1);
+//	while(RD == 1);
 	EEADR	= x1;
 
 	GIE		= 0;
@@ -63,7 +63,7 @@ unsigned char read_low_eeprom(unsigned char x1)
 
 	EEPGD	= 0;
 	RD		= 1;
-
+	while(RD == 1);
 	GIE		= 1;
 	PEIE	= 1;
 
