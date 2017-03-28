@@ -37,9 +37,10 @@ void uart_init(void)
 
 void uart_tx_main(void)
 {
-	unsigned char i = 0;
 	if( (uart_start & 0x80) == 0x80)	//只看最高bit是否有設定有才確認動作
 	{
+		unsigned char i = 0;
+
 		if(uart_rx_buff[0] != 0x10 && uart_rx_buff[1] != 0x02 &&
 		uart_rx_buff[4] != 0x01 && uart_rx_buff[7] != 0x10 && 
 		uart_rx_buff[8] != 0x03
@@ -256,17 +257,17 @@ void uart_sned_buffer(unsigned char count)
 	unsigned char i = 0;
 	unsigned char crc = 0;
 
-	//指令
+	//指令和字節先計算crc
 	crc = crc + uart_rx_buff[2];
 	crc = crc + uart_rx_buff[3];
 	crc = crc + (count*2);
-
+	//再算資料的crc
 	for(i=0;i<count;i++)
 	{
-		unsigned char temp = 0x00ff &  uart_buffer[i];
+		unsigned char temp = 0x00ff &  uart_buffer[i];	//先取低位元
 	
 		crc = crc + temp;
-		temp = uart_buffer[i] >> 8;
+		temp = uart_buffer[i] >> 8;			//再取高位元
 		crc = crc + temp;
 	}	
 	uart_send(0x10);

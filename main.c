@@ -51,7 +51,7 @@ void hardware_config(void)
 }
 
 //中斷函式
-//這裡要盡量避免用副程式用副程式
+//這裡要盡量避免用外部副程式要用也不要和其他程式共用到
 void interrupt ISR(void)
 {
 	if( RCIF )	//UART 讀取中斷
