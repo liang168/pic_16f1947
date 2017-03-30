@@ -48,6 +48,8 @@ void led_control(void)
 		case 4:		//強制高轉速
 		pwm1_out_set(0x14);
 		break;
+		default:
+		break;
 	}
 
 

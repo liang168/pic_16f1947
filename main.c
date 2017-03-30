@@ -65,22 +65,38 @@ void interrupt ISR(void)
 			uart_rx_count ++;
 			if(uart_rx_count >= 10)
 			{
+				unsigned char i = 0;
+
 				uart_rx_count = 0;
 				uart_delay = 0;
 
-				if(uart_rx_buff[0] != 0x10 && uart_rx_buff[1] != 0x02 &&
-				uart_rx_buff[4] != 0x01 && uart_rx_buff[7] != 0x10 && 
-				uart_rx_buff[8] != 0x03
-				)
+				if(uart_rx_buff[0] == 0x10 && uart_rx_buff[1] == 0x02 &&
+				uart_rx_buff[4] == 0x01 && uart_rx_buff[7] == 0x10 &&
+				uart_rx_buff[8] == 0x03 )
 				{
-					unsigned char i;
+					unsigned char crc = 0;
+
+					for(i = 2; i<7 ; i++)
+					{
+						crc = crc + uart_rx_buff[i];
+					}
+					if(crc == uart_rx_buff[9])
+						uart_start |= (1<<7);	//都正確才起動uart處理
+					else
+					{
+						for(i = 0 ; i<10 ; i++)
+						{	
+							uart_rx_buff[i]=0;
+						}		
+					}
+				}
+				else
+				{
 					for(i = 0 ; i<10 ; i++)
 					{	
 						uart_rx_buff[i]=0;
 					}				
-				}
-				else	
-					uart_start |= (1<<7);
+				}		
 			}
 		}
 	}
@@ -137,7 +153,12 @@ void interrupt ISR(void)
 			if(uart_delay == 300)	//30ms
 			{
 				uart_delay =0;
-				uart_rx_count = 0;			
+				uart_rx_count = 0;
+				unsigned char i;
+				for(i = 0 ; i<10 ; i++)
+				{	
+					uart_rx_buff[i]=0;
+				}		
 			}
 		}
 	}
@@ -181,10 +202,10 @@ void main(void)
 			break;
 			case 0x02:
 			adc_change();
-			status_flag = 3;
-			break;
-			case 0x03:
-			//updates_interface();
+		//	status_flag = 3;
+		//	break;
+		//	case 0x03:
+		//	updates_interface();
 			led_control();
 			status_flag = 4;
 			break;

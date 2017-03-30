@@ -105,7 +105,7 @@ void uart_tx_main(void)
 				{
 					//轉換成eeprom 位址 因EEPROM是從零開始
 					address  = address - 0x18;
-					address = address * 2;
+					address = address * 2;		//乘2是因為int 為2byte
 				}
 				write_int_eeprom(address,uart_buffer[1],uart_buffer[2]);
 				uart_buffer[0] = 0;

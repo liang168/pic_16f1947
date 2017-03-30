@@ -7,11 +7,14 @@
 //#define		UART_SET_DATA_L		0xcf
 //#define		UART_SET_DATA_H		0x00
 // Clock	32Mhz	9600bps set
-#define		UART_SET_DATA_L		0x40
-#define		UART_SET_DATA_H		0x03
+//#define		UART_SET_DATA_L		0x40
+//#define		UART_SET_DATA_H		0x03
 // Clock	16Mhz	9600bps set
 //#define			UART_SET_DATA_L		0xa0
 //#define			UART_SET_DATA_H		0x01
+// Clock	32Mhz	115200bps set
+#define		UART_SET_DATA_L		0x44
+#define		UART_SET_DATA_H		0x00
 
 #define		NOT_TX_INT		0
 

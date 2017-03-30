@@ -60,7 +60,7 @@ void adc_hw_init(void)
 void adc_read(unsigned char channel)
 {
 	ADCON0 = (channel<<2)+1;	//位移使用通道加起動bit
-	__delay_ms(1);
+	__delay_us(200);
 	ADGO = 1;
 	while(ADGO) continue;
 	CalValueIn.W4 = 0;
@@ -247,40 +247,110 @@ unsigned int check_alarm_lo(unsigned int fan1_adc,unsigned int fan2_adc,
 
 //------------------------------------
 //第一組風扇確定
-	if( fan1_adc <= PSinterface2.FAN_I_HighAlarm )		//確定是否小於最高電壓
-		clrbit(out_alarm,1);
+	if( testbit(out_alarm,1) == 1)
+	{
+		if( fan1_adc < (PSinterface2.FAN_I_HighAlarm - PSinterface2.FAN_I_InsideGap) )
+			clrbit(out_alarm,1);
+	}
 	else
-		setbit(out_alarm,1);
-	if( fan1_adc >= PSinterface2.FAN_I_LowAlarm )		//確定是否大於最低電壓
-		clrbit(out_alarm,2);
+	{
+		if( fan1_adc < (PSinterface2.FAN_I_HighAlarm + PSinterface2.FAN_I_OutsideGap) )		//確定是否小於最高電壓
+			clrbit(out_alarm,1);
+		else
+			setbit(out_alarm,1);
+	}
+	
+	if( testbit(out_alarm,2) == 1)
+	{
+		if( fan1_adc > (PSinterface2.FAN_I_LowAlarm - PSinterface2.FAN_I_OutsideGap) )
+			clrbit(out_alarm,2);
+	}
 	else
-		setbit(out_alarm,2);
-	if( fan1_rpm <= PSinterface2.FAN_Rate_HighAlarm )	//確定是否小於最高轉速
-		clrbit(out_alarm,3);
+	{
+		if( fan1_adc > (PSinterface2.FAN_I_LowAlarm + PSinterface2.FAN_I_InsideGap) )		//確定是否大於最低電壓
+			clrbit(out_alarm,2);
+		else
+			setbit(out_alarm,2);
+	}
+
+	if( testbit(out_alarm,3) == 1)
+	{
+		if( fan1_rpm < (PSinterface2.FAN_Rate_HighAlarm - PSinterface2.FAN_Rate_InsideGap) )
+			clrbit(out_alarm,3);
+	}
 	else
-		setbit(out_alarm,3);
-	if( fan1_rpm >= PSinterface2.FAN_Rate_LowAlarm )	//確定是否大於最低轉速
-		clrbit(out_alarm,4);
+	{
+		if( fan1_rpm < (PSinterface2.FAN_Rate_HighAlarm + PSinterface2.FAN_Rate_OutsideGap) )	//確定是否小於最高轉速
+			clrbit(out_alarm,3);
+		else
+			setbit(out_alarm,3);
+	}
+
+	if( testbit(out_alarm,4) == 1)
+	{
+		if( fan1_rpm > (PSinterface2.FAN_Rate_LowAlarm + PSinterface2.FAN_Rate_OutsideGap) )
+			clrbit(out_alarm,4);
+	}
 	else
-		setbit(out_alarm,4);
+	{
+		if( fan1_rpm > (PSinterface2.FAN_Rate_LowAlarm - PSinterface2.FAN_Rate_InsideGap) )	//確定是否大於最低轉速
+			clrbit(out_alarm,4);
+		else
+			setbit(out_alarm,4);
+	}
 //------------------------------------
 //第二組風扇確定
-	if( fan2_adc <= PSinterface2.FAN_I_HighAlarm )
-		clrbit(out_alarm,9);
+	if( testbit(out_alarm,9) == 1)
+	{
+		if( fan2_adc < (PSinterface2.FAN_I_HighAlarm - PSinterface2.FAN_I_InsideGap) )
+			clrbit(out_alarm,9);
+	}
 	else
-		setbit(out_alarm,9);
-	if( fan2_adc >= PSinterface2.FAN_I_LowAlarm )
-		clrbit(out_alarm,10);
+	{
+		if( fan2_adc < (PSinterface2.FAN_I_HighAlarm + PSinterface2.FAN_I_OutsideGap) )
+			clrbit(out_alarm,9);
+		else
+			setbit(out_alarm,9);
+	}
+
+	if( testbit(out_alarm,10) == 1)
+	{
+		if( fan2_adc > (PSinterface2.FAN_I_LowAlarm - PSinterface2.FAN_I_OutsideGap) )
+			clrbit(out_alarm,10);
+	}
 	else
-		setbit(out_alarm,10);
-	if( fan2_rpm <= PSinterface2.FAN_Rate_HighAlarm )
-		clrbit(out_alarm,11);
+	{
+		if( fan2_adc > (PSinterface2.FAN_I_LowAlarm + PSinterface2.FAN_I_InsideGap) )
+			clrbit(out_alarm,10);
+		else
+			setbit(out_alarm,10);
+	}
+
+	if( testbit(out_alarm,11) == 1)
+	{
+		if( fan2_rpm < (PSinterface2.FAN_Rate_HighAlarm - PSinterface2.FAN_Rate_InsideGap) )
+			clrbit(out_alarm,11);
+	}
 	else
-		setbit(out_alarm,11);
-	if( fan2_rpm >= PSinterface2.FAN_Rate_LowAlarm )
-		clrbit(out_alarm,12);
+	{
+		if( fan2_rpm < (PSinterface2.FAN_Rate_HighAlarm + PSinterface2.FAN_Rate_OutsideGap) )
+			clrbit(out_alarm,11);
+		else
+			setbit(out_alarm,11);
+	}
+
+	if( testbit(out_alarm,12) == 1)
+	{
+		if( fan2_rpm > (PSinterface2.FAN_Rate_LowAlarm + PSinterface2.FAN_Rate_OutsideGap) )
+			clrbit(out_alarm,12);
+	}
 	else
-		setbit(out_alarm,12);
+	{
+		if( fan2_rpm > (PSinterface2.FAN_Rate_LowAlarm - PSinterface2.FAN_Rate_InsideGap) )
+			clrbit(out_alarm,12);
+		else
+			setbit(out_alarm,12);
+	}
 //------------------------------------
 	if(num == 0)
 	{
