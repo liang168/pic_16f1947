@@ -67,10 +67,38 @@ void interrupt ISR(void)
 			{
 				uart_rx_count = 0;
 				uart_delay = 0;
-				uart_start |= (1<<7);
+
+				if(uart_rx_buff[0] != 0x10 && uart_rx_buff[1] != 0x02 &&
+				uart_rx_buff[4] != 0x01 && uart_rx_buff[7] != 0x10 && 
+				uart_rx_buff[8] != 0x03
+				)
+				{
+					unsigned char i;
+					for(i = 0 ; i<10 ; i++)
+					{	
+						uart_rx_buff[i]=0;
+					}				
+				}
+				else	
+					uart_start |= (1<<7);
 			}
 		}
 	}
+#if		NOT_TX_INT	== 0
+	if( TXIF )
+	{
+		TXIF = 0;
+		
+		TX1REG = uart_tx_buff[uart_tx_start];
+		uart_tx_start ++;
+		if(uart_tx_start == uart_tx_count)
+		{		
+			uart_tx_start = 0;
+			uart_tx_count = 0;
+			TX1STAbits.TXEN = 0;
+		}
+	}
+#endif
 	if( TMR1IF )	//TMR1 ­p®É¤¤Â_
 	{
 		TMR1H	= TIME1_SET_DATA_H;
@@ -156,7 +184,7 @@ void main(void)
 			status_flag = 3;
 			break;
 			case 0x03:
-			updates_interface();
+			//updates_interface();
 			led_control();
 			status_flag = 4;
 			break;

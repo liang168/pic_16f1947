@@ -41,5 +41,5 @@ void pwm1_init(void)
 void pwm1_out_set(unsigned char pwm_out)
 {
 	CCPR1L	= pwm_out;
-	__delay_ms(100);
+	__delay_ms(1);
 }
