@@ -56,12 +56,36 @@ void led_control(void)
 	if ( (PORTD & 0b01000000) == 0 )	//風扇有接上
 	{
 		//亮綠燈
-		LATB &= ~(1<<0);
-		LATB &= ~(1<<1);
-		LATB &= ~(1<<2);
-		LATD |= (1<<0);		//hi動作
-		LATD |= (1<<1);
-		LATD |= (1<<2);	
+		if( (PSinterface1.FAN12_Status & 0x001e) != 0 )
+		{
+			LATB |= (1<<0);
+			LATD &= ~(1<<0);
+		}
+		else
+		{
+			LATB &= ~(1<<0);
+			LATD |= (1<<0);		//hi動作
+		}
+		if( (PSinterface1.FAN12_Status & 0x1e00) != 0 )
+		{
+			LATB |= (1<<1);
+			LATD &= ~(1<<1);
+		}
+		else
+		{
+			LATB &= ~(1<<1);
+			LATD |= (1<<1);
+		}
+		if( (PSinterface1.FAN34_Status & 0x001e) != 0 )
+		{
+			LATB |= (1<<2);
+			LATD &= ~(1<<2);
+		}
+		else
+		{
+			LATB &= ~(1<<2);
+			LATD |= (1<<2);	
+		}
 	}
 	else	//風扇沒接上
 	{
@@ -76,12 +100,36 @@ void led_control(void)
 	
 	if ( (PORTD & 0b10000000) == 0 )
 	{
-		LATB &= ~(1<<3);
-		LATB &= ~(1<<4);
-		LATB &= ~(1<<5);
-		LATD |= (1<<3);
-		LATD |= (1<<4);
-		LATD |= (1<<5);
+		if( (PSinterface1.FAN34_Status & 0x1e00) != 0 )
+		{
+			LATD &= ~(1<<3);
+			LATB |= (1<<3);
+		}
+		else
+		{
+			LATB &= ~(1<<3);
+			LATD |= (1<<3);		//hi動作
+		}
+		if( (PSinterface1.FAN56_Status & 0x001e) != 0 )
+		{
+			LATD &= ~(1<<4);
+			LATB |= (1<<4);
+		}
+		else
+		{
+			LATB &= ~(1<<4);
+			LATD |= (1<<4);
+		}
+		if( (PSinterface1.FAN56_Status & 0x1e00) != 0 )
+		{
+			LATD &= ~(1<<5);
+			LATB |= (1<<5);
+		}
+		else
+		{
+			LATB &= ~(1<<5);
+			LATD |= (1<<5);	
+		}
 	}
 	else
 	{

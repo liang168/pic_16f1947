@@ -406,7 +406,6 @@ void uart_tx_int_en(unsigned char count)
 	uart_tx_buff[count+1] = 0x03;
 	uart_tx_buff[count+2] = crc;
 	uart_tx_count = num + 5;
-//	TXIE = 1;
 	TX1STAbits.TXEN = 1;
 }
 #endif
