@@ -96,18 +96,18 @@ void uart_tx_main(void)
 
 		switch(out_data)
 		{
-			case 1:
+			case 1:		//寫eeprom設定
 			{
 				unsigned char address = uart_buffer[0];
 			
-				write_interface(address,uart_buffer[1],uart_buffer[2]);
+				write_interface(address,uart_buffer[1],uart_buffer[2]);	//寫記憶體
 				if(address >= 0x18)
 				{
 					//轉換成eeprom 位址 因EEPROM是從零開始
 					address  = address - 0x18;
 					address = address * 2;		//乘2是因為int 為2byte
 				}
-				write_int_eeprom(address,uart_buffer[1],uart_buffer[2]);
+				write_int_eeprom(address,uart_buffer[1],uart_buffer[2]);	//寫eeprom 斷電時回讀設定
 				uart_buffer[0] = 0;
 				uart_buffer[1] = 0;
 				uart_buffer[2] = 0;
@@ -118,7 +118,7 @@ void uart_tx_main(void)
 				uart_start = 0;
 			}
 			break;
-			case 2:
+			case 2:		//回傳狀態資料1
 			{
 #if		NOT_TX_INT == 1				
 				// 風扇工作狀態 1 2
@@ -193,7 +193,7 @@ void uart_tx_main(void)
 				uart_start = 0;	
 			}
 			break;
-			case 3:
+			case 3:		//回傳狀態資料2
 			{
 #if		NOT_TX_INT == 1				
 				unsigned int temp = 0;
@@ -268,7 +268,7 @@ void uart_tx_main(void)
 				uart_start = 0;
 			}
 			break;
-			case 4:
+			case 4:		//讀溫度值
 				//更新溫度值 所以先清資料
 				PSinterface2.Gain_Temperature = 0;
 				PSinterface2.Gain_Temperature = uart_buffer[2] << 8;
@@ -283,22 +283,46 @@ void uart_tx_main(void)
 				}
 				uart_start = 0;
 			break;
-			case 8:
-				write_int_eeprom(0,0x00,0x01);
-				write_int_eeprom(2,0x00,0x0a);
-				write_int_eeprom(4,0x00,0x0a);
-
-				write_int_eeprom(6,0x02,0x58);
-				write_int_eeprom(8,0x00,0x05);
-				write_int_eeprom(10,0x00,0x00);
-				write_int_eeprom(12,0x16,0xda);
-				write_int_eeprom(14,0x04,0x1a);	
-				write_int_eeprom(16,0x00,0x00);
-
-				write_int_eeprom(32,0x30,0x04);
+			case 8:			//回復EEPROM預設值
+				//記憶體更新 資料先lo 再hi
+				write_interface(0x18,0x01,0x00);
+				write_interface(0x19,0x0a,0x00);
+				write_interface(0x1a,0x0a,0x00);
+				write_interface(0x1b,0x58,0x02);	//風扇high 電流alarm
+				write_interface(0x1c,0x05,0x00);	//風扇low 電流alarm
+				write_interface(0x1d,0x04,0x04);	//風扇電流inGap and outGap
+				write_interface(0x1e,0x78,0x1e);	//轉速high
+				write_interface(0x1f,0x1a,0x04);	//轉速low
+				write_interface(0x20,0x04,0x04);	//轉速電流inGap and outGap
+				write_interface(0x21,0x00,0x00);
+				write_interface(0x22,0x00,0x00);
+				write_interface(0x23,0x00,0x00);
+				write_interface(0x24,0x00,0x00);
+				write_interface(0x25,0x00,0x00);
+				write_interface(0x26,0x00,0x00);
+				write_interface(0x27,0x00,0x00);
+				write_interface(0x28,0x04,0x30);				
+				//EEPROM 更新 資料先lo 再hi
+				write_int_eeprom(0,0x01,0x00);
+				write_int_eeprom(2,0x0a,0x00);
+				write_int_eeprom(4,0x0a,0x00);
+				write_int_eeprom(6,0x58,0x02);	//風扇high 電流alarm
+				write_int_eeprom(8,0x05,0x00);	//風扇low 電流alarm
+				write_int_eeprom(10,0x04,0x04);	//風扇電流inGap and outGap
+				write_int_eeprom(12,0x78,0x1e);	//轉速high
+				write_int_eeprom(14,0x1a,0x04);	//轉速low
+				write_int_eeprom(16,0x04,0x04);	//轉速電流inGap and outGap
+				write_int_eeprom(18,0x00,0x00);
+				write_int_eeprom(20,0x00,0x00);
+				write_int_eeprom(22,0x00,0x00);
+				write_int_eeprom(24,0x00,0x00);
+				write_int_eeprom(26,0x00,0x00);
+				write_int_eeprom(28,0x00,0x00);
+				write_int_eeprom(30,0x00,0x00);
+				write_int_eeprom(32,0x04,0x30);
 
 				uart_buffer[0] = 0;
-				uart_buffer[1] = 0;
+				uart_buffer[1] = 0; 
 				uart_buffer[2] = 0;
 				for(i = 0 ; i<10 ; i++)
 				{	

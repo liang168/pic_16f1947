@@ -87,7 +87,13 @@ void adc_change(void)
 	CalValueIn.UW4 = CalValueIn.UW4 * 941;				
 	CalValueIn.UW4 = CalValueIn.UW4 / 64;
 	CalValueIn.UW4 = CalValueIn.UW4 - 6323;
-	PSinterface1.PS_I_5V = CalValueIn.Uint[0];
+	if( CalValueIn.Uint[0] < 50000 )
+		PSinterface1.PS_I_5V = CalValueIn.Uint[0];
+	else
+		PSinterface1.PS_I_5V = 0;	
+
+//	if( PSinterface1.PS_I_5V > 50000 )
+//		PSinterface1.PS_I_5V = 0;
 
 	adc_read(DC9V_CURRENT);
 #if		ADC_DEBUG	== 1
