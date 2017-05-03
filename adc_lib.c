@@ -108,9 +108,12 @@ void adc_change(void)
 #if		ADC_DEBUG	== 1
 	adc_data[12] = CalValueIn.Uint[0];
 #endif
-	CalValueIn.UW4 = CalValueIn.UW4 * 941;				
-	CalValueIn.UW4 = CalValueIn.UW4 / 64;
-	CalValueIn.UW4 = CalValueIn.UW4 - 6323;
+//	CalValueIn.UW4 = CalValueIn.UW4 * 941;				
+//	CalValueIn.UW4 = CalValueIn.UW4 / 64;
+//	CalValueIn.UW4 = CalValueIn.UW4 - 6323;
+	CalValueIn.UW4 = CalValueIn.UW4 * 213;				
+	CalValueIn.UW4 = CalValueIn.UW4 / 16;
+	CalValueIn.UW4 = CalValueIn.UW4 - 6440;
 	PSinterface1.PS_I_5VS = CalValueIn.Uint[0];
 	//----------------------------
 
