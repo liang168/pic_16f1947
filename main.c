@@ -193,14 +193,14 @@ void main(void)
 	{
 		switch(status_flag)	//根據狀態一個時間只做一件事
 		{
-			case 0x01:
+			case 0x01:			//狀態一 讀風扇
 			if(time1_out == 1)
 			{
 				time1_out = 0;
 				read_fan_rpm();
 			}
 			break;
-			case 0x02:
+			case 0x02:			//狀態二 讀adc 控制 led
 			adc_change();
 		//	status_flag = 3;
 		//	break;
@@ -208,8 +208,8 @@ void main(void)
 		//	updates_interface();
 			led_control();
 			status_flag = 4;
-			break;
-			case 0x04:
+			break;				
+			case 0x04:			//狀態四 uart 輸出控制
 			uart_tx_main();
 			status_flag = 1;
 			break;

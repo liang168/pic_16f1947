@@ -14,9 +14,9 @@ void uart_init(void)
 {
 	unsigned char i;
 
-	uart_rx_count	= 0;
+	uart_rx_count	= 0;	// UART 接收陣列用計數器變數
 	uart_start		= 0;	// UART 工作旗號
-	uart_delay		= 0;
+	uart_delay		= 0;	// UART 收資料DELAY計算用
 
 	for(i=0;i<BUFF_MAX;i++)
 	{
@@ -27,8 +27,8 @@ void uart_init(void)
 		uart_rx_buff[i]=0;
 	}
 #if		NOT_TX_INT	== 0
-	uart_tx_count = 0;
-	uart_tx_start = 0;
+	uart_tx_count = 0;		// UART 發送資料比對用變數
+	uart_tx_start = 0;		// UART 發送陣列計數器變數
 	for(i=0;i<TX_BUFF_MAX;i++)
 	{
 		uart_tx_buff[i]=0;

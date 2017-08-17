@@ -22,15 +22,15 @@ void led_control(void)
 		}
 		break;
 		case 1:		//根據溫度自動控制
-		if(PSinterface2.Gain_Temperature < 400)
+		if(PSinterface2.Gain_Temperature < 250)
 		{
 			pwm1_out_set(0x04);
 		}
-		else if( (PSinterface2.Gain_Temperature > 400) && (PSinterface2.Gain_Temperature < 590) )
+		else if( (PSinterface2.Gain_Temperature > 450) && (PSinterface2.Gain_Temperature < 500) )
 		{
 			pwm1_out_set(0x0a);
 		}
-		else if(PSinterface2.Gain_Temperature > 590 )
+		else if(PSinterface2.Gain_Temperature > 500 )
 		{
 			pwm1_out_set(0x14);
 		}
