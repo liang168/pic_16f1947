@@ -63,13 +63,14 @@ void interrupt ISR(void)
 		{
 			uart_rx_buff[uart_rx_count] = data;
 			uart_rx_count ++;
-			if(uart_rx_count >= 10)
+			if(uart_rx_count >= 10)			//收滿十個Byte才比對資料
 			{
 				unsigned char i = 0;
 
-				uart_rx_count = 0;
-				uart_delay = 0;
+				uart_rx_count = 0;			//count 清為零
+				uart_delay = 0;				//接收超時count 清零
 
+				//先比對固定位址資料是否正確
 				if(uart_rx_buff[0] == 0x10 && uart_rx_buff[1] == 0x02 &&
 				uart_rx_buff[4] == 0x01 && uart_rx_buff[7] == 0x10 &&
 				uart_rx_buff[8] == 0x03 )
@@ -90,7 +91,7 @@ void interrupt ISR(void)
 						}		
 					}
 				}
-				else
+				else	//資料不對清除Buffer為零
 				{
 					for(i = 0 ; i<10 ; i++)
 					{	
