@@ -54,58 +54,59 @@ unsigned int calculate_fan_rpm(unsigned int rpm_data)
 
 void read_fan_rpm(void)
 {
-	switch(fan_flag)
+	switch(fan_flag)		//抓clk工作狀態
 	{
-		case 0:
-		fan_count[0]++;
-		if(fan_count[0] > MAX_FAN_COUNT)	//讀取時間超標
-			fan_flag = 8;					//下一階結束
+		//每個風扇抓四個low四個hi 抓時間長度
+		case 0:				//讀第一個clk 計算low長度
+		fan_count[0]++;		//只要clk狀態沒有改變進來就加一
+		if(fan_count[0] > MAX_FAN_COUNT)		//讀取時間超標
+			fan_flag = 8;						//下一階結束
 		else if( (fan_status & check_fan) != 0)	//讀到為HI
-			fan_flag = 1;					//到下一階計數
+			fan_flag = 1;						//到下一階計數
 		break;
-		case 1:
-		fan_count[1]++;
-		if(fan_count[1] > MAX_FAN_COUNT)	//讀取時間超標
-			fan_flag = 8;		
+		case 1:				//讀第二個clk 計算hi長度
+		fan_count[1]++;		//
+		if(fan_count[1] > MAX_FAN_COUNT)		//讀取時間超標
+			fan_flag = 8;						//
 		else if( (fan_status & check_fan) == 0)	//讀到為LO
-			fan_flag = 2;
+			fan_flag = 2;						//
 		break;
-		case 2:
+		case 2:				//讀第三個clk 計算low長度
 		fan_count[2] ++;
 		if(fan_count[2] > MAX_FAN_COUNT)	
 			fan_flag = 8;
 		else if( (fan_status & check_fan) != 0)	//讀到為HI
 			fan_flag = 3;
 		break;
-		case 3:
+		case 3:				//讀第四個clk 計算hi長度
 		fan_count[3] ++;
 		if(fan_count[3] > MAX_FAN_COUNT)	
 			fan_flag = 8;
 		else if( (fan_status & check_fan) == 0)	//讀到為LO
 			fan_flag = 4;
 		break;
-		case 4:
+		case 4:				//讀第五個clk 計算low長度
 		fan_count[4] ++;
 		if(fan_count[4] > MAX_FAN_COUNT)
 			fan_flag = 8;
 		else if( (fan_status & check_fan) != 0)	//讀到為HI
 			fan_flag = 5;
 		break;
-		case 5:
+		case 5:				//讀第六個clk 計算hi長度
 		fan_count[5] ++;
 		if(fan_count[5] > MAX_FAN_COUNT)	
 			fan_flag = 8;
 		else if( (fan_status & check_fan) == 0)	//讀到為LO
 			fan_flag = 6;
 		break;
-		case 6:
+		case 6:				//讀第七個clk 計算low長度
 		fan_count[6] ++;
 		if(fan_count[6] > MAX_FAN_COUNT)	
 			fan_flag = 8;
 		else if( (fan_status & check_fan) != 0)	//讀到為HI
 			fan_flag = 7;
 		break;
-		case 7:
+		case 7:				//讀第八個clk 計算hi長度
 		fan_count[7] ++;
 		if(fan_count[7] > MAX_FAN_COUNT)	
 			fan_flag = 8;	
@@ -126,7 +127,7 @@ void read_fan_rpm(void)
 				}
 			}
 			fan_flag = 0;			//回歸0階計數
-			switch(check_fan)
+			switch(check_fan)		//計算那組風扇的轉速
 			{
 				case 0x01:
 					check_fan = check_fan<<1;
